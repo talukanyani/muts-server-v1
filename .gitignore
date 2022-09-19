@@ -5,6 +5,9 @@ node_modules
 client/.pnp
 .pnp.js
 
+# private
+/config/dbConfig.js
+
 # testing
 client/coverage
 
