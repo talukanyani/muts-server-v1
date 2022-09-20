@@ -1,5 +1,5 @@
 const express = require('express')
-const { subscribe } = require('../models/db')
+const { subscribe, unsubscribe } = require('../models/db')
 
 const app = express()
 const router = express.Router()
@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
         if (dbError) {
             if (dbError.errno === 1062) {
                 res.json({
-                    "status": "Already Submitted",
+                    "Status": "Already Submitted",
                     "Email": email
                 })
             } else {
@@ -26,6 +26,32 @@ router.post('/', (req, res) => {
 
         res.json({
             "Status": "Successfully Subscribed",
+            "Email": email
+        })
+    })
+})
+
+router.delete('/', (req, res) => {
+    var id = req.body.id
+    var email = req.body.email
+
+    unsubscribe(id, (dbError, info) => {
+        if (dbError) {
+            res.sendStatus(500)
+            onDevelopment && console.log(dbError)
+            return
+        }
+
+        if (info.affectedRows == 0) {
+            res.json({
+                "Status": "Already Unsubscribed",
+                "Email": email
+            })
+            return
+        }
+
+        res.json({
+            "Status": "Successfully Unsubscribed",
             "Email": email
         })
     })

@@ -16,6 +16,19 @@ const subscribe = (email, result) => {
     })
 }
 
+const unsubscribe = (id, result) => {
+    var sqlQuery = `DELETE FROM newsletter_emails WHERE id = ${id}`
+
+    connection.query(sqlQuery, (error, info) => {
+        if (error) {
+            result(error)
+            return
+        }
+
+        result(null, info)
+    })
+}
+
 const emailSubmit = (email, result) => {
     var sqlQuery = `INSERT INTO sc_emails (email) VALUES('${email}')`
 
@@ -29,5 +42,9 @@ const emailSubmit = (email, result) => {
     })
 }
 
-module.exports = { subscribe, emailSubmit }
+module.exports = {
+    subscribe,
+    unsubscribe,
+    emailSubmit
+}
 
