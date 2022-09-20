@@ -42,9 +42,24 @@ const emailSubmit = (email, result) => {
     })
 }
 
+const send = (message, result) => {
+    console.log(message);
+    var sqlQuery = `INSERT INTO messages (name, email, text) VALUES('${message.name}', '${message.email}', '${message.text}')`;
+
+    connection.query(sqlQuery, (error, info) => {
+        if (error) {
+            result(error)
+            return
+        }
+
+        result(null, info)
+    })
+}
+
 module.exports = {
     subscribe,
     unsubscribe,
-    emailSubmit
+    emailSubmit,
+    send
 }
 

@@ -3,6 +3,7 @@ const cors = require('cors')
 
 const newsletter = require('./routes/newsletter')
 const scNewsletter = require('./routes/sc-newsletter')
+const contact = require('./routes/contact')
 
 const app = express()
 
@@ -17,10 +18,8 @@ app.use(cors({
 
 app.use('/newsletter', newsletter)
 app.use('/sc/notify_me', scNewsletter)
+app.use('/contact', contact)
 
-var date = new Date()
-
-console.log(date.getTime())
 const port = process.env.PORT || 3001
 
 app.listen(port, () => {
