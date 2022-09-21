@@ -1,59 +1,46 @@
 const express = require('express')
-const { subscribe, unsubscribe } = require('../models/db')
 
-const app = express()
+const { subscribe, unsubscribe } = require('../models/models')
+const { validateEmail } = require('../middlewares/validate')
+const checkEmailDup = require('../middlewares/newsletter_dup')
+
 const router = express.Router()
 
-const onDevelopment = app.get('env') == 'development'
+const onDevelopment = express().get('env') == 'development'
 
-router.post('/', (req, res) => {
-    var email = req.body.email
+router.post('/', validateEmail, checkEmailDup, (req, res) => {
+    var reqdetails = req.body
 
-    subscribe(email, (dbError, info) => {
-        if (dbError) {
-            if (dbError.errno === 1062) {
-                res.json({
-                    "Status": "Already Submitted",
-                    "Email": email
-                })
-            } else {
-                res.sendStatus(500)
-                onDevelopment && console.log(dbError)
-            }
-
-            return
-        }
-
-        res.json({
-            "Status": "Successfully Subscribed",
-            "Email": email
-        })
-    })
-})
-
-router.delete('/', (req, res) => {
-    var id = req.body.id
-    var email = req.body.email
-
-    unsubscribe(id, (dbError, info) => {
+    subscribe(reqdetails, (dbError, dbInfo) => {
         if (dbError) {
             res.sendStatus(500)
             onDevelopment && console.log(dbError)
             return
         }
 
-        if (info.affectedRows == 0) {
-            res.json({
-                "Status": "Already Unsubscribed",
-                "Email": email
-            })
+        res.json({ "status": "successfully_subscribed" })
+        onDevelopment && console.log(dbInfo)
+    })
+})
+
+router.delete('/', (req, res) => {
+    var reqdetails = req.body
+
+    unsubscribe(reqdetails, (dbError, dbInfo) => {
+        if (dbError) {
+            res.sendStatus(500)
+            onDevelopment && console.log(dbError)
             return
         }
 
-        res.json({
-            "Status": "Successfully Unsubscribed",
-            "Email": email
-        })
+        if (dbInfo.affectedRows == 0) {
+            res.sendStatus(404)
+            onDevelopment && console.log(dbInfo)
+            return
+        }
+
+        res.json({ "status": "successfully_unsubscribed" })
+        onDevelopment && console.log(dbInfo)
     })
 })
 

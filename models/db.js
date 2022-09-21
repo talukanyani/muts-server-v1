@@ -3,63 +3,15 @@ const dbConfig = require('../config/dbConfig')
 
 const connection = mysql.createConnection(dbConfig)
 
-const subscribe = (email, result) => {
-    var sqlQuery = `INSERT INTO newsletter_emails (email) VALUES('${email}')`
-
-    connection.query(sqlQuery, (error, info) => {
+const db = (sqlQuery, result) => {
+    connection.query(sqlQuery, (error, info, field) => {
         if (error) {
-            result(error)
+            result(error, null, null)
             return
         }
 
-        result(null, info)
+        result(null, info, field)
     })
 }
 
-const unsubscribe = (id, result) => {
-    var sqlQuery = `DELETE FROM newsletter_emails WHERE id = ${id}`
-
-    connection.query(sqlQuery, (error, info) => {
-        if (error) {
-            result(error)
-            return
-        }
-
-        result(null, info)
-    })
-}
-
-const emailSubmit = (email, result) => {
-    var sqlQuery = `INSERT INTO sc_emails (email) VALUES('${email}')`
-
-    connection.query(sqlQuery, (error, info) => {
-        if (error) {
-            result(error)
-            return
-        }
-
-        result(null, info)
-    })
-}
-
-const send = (message, result) => {
-    console.log(message);
-    var sqlQuery = `INSERT INTO messages (name, email, text) VALUES('${message.name}', '${message.email}', '${message.text}')`;
-
-    connection.query(sqlQuery, (error, info) => {
-        if (error) {
-            result(error)
-            return
-        }
-
-        result(null, info)
-    })
-}
-
-module.exports = {
-    subscribe,
-    unsubscribe,
-    emailSubmit,
-    send
-}
-
+module.exports = db

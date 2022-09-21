@@ -1,33 +1,25 @@
 const express = require('express')
-const { emailSubmit } = require('../models/db')
 
-const app = express()
+const { emailSubmit } = require('../models/models')
+const { validateEmail } = require('../middlewares/validate')
+const checkEmailDup = require('../middlewares/sc_email_dup')
+
 const router = express.Router()
 
-const onDevelopment = app.get('env') == 'development'
+const onDevelopment = express().get('env') == 'development'
 
-router.post('/', (req, res) => {
-    var email = req.body.email
+router.post('/', validateEmail, checkEmailDup, (req, res) => {
+    var reqdetails = req.body
 
-    emailSubmit(email, (dbError, info) => {
+    emailSubmit(reqdetails, (dbError, dbInfo) => {
         if (dbError) {
-            if (dbError.errno === 1062) {
-                res.json({
-                    "status": "Already Submitted",
-                    "Email": email
-                })
-            } else {
-                res.sendStatus(500)
-                onDevelopment && console.log(dbError)
-            }
-
+            res.sendStatus(500)
+            onDevelopment && console.log(dbError)
             return
         }
 
-        res.json({
-            "status": "Successfully Submitted",
-            "Email": email
-        })
+        res.json({ "status": "successfully_submitted" })
+        onDevelopment && console.log(dbInfo)
     })
 })
 
