@@ -18,7 +18,10 @@ router.post('/', validateEmail, checkEmailDup, (req, res) => {
             return
         }
 
-        res.json({ "status": "successfully_subscribed" })
+        res.json({
+            "message": "successfully_subscribed",
+            "email": req.body.email
+        })
         onDevelopment && console.log(dbInfo)
     })
 })
@@ -39,7 +42,10 @@ router.delete('/', (req, res) => {
             return
         }
 
-        res.json({ "status": "successfully_unsubscribed" })
+        res.json({
+            "message": "successfully_unsubscribed",
+            "email": req.body.email
+        })
         onDevelopment && console.log(dbInfo)
     })
 })

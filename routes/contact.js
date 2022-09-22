@@ -20,7 +20,10 @@ router.post('/', middlewares, (req, res) => {
             return
         }
 
-        res.json({ "status": "successfully_sent" })
+        res.json({
+            "message": "successfully_sent",
+            "email": req.body.email
+        })
         onDevelopment && console.log(info)
     })
 })

@@ -15,14 +15,29 @@ function Body(props) {
     const [emailError, setEmailError] = useState(null);
 
     const handleSubmit = event => {
+        event.preventDefault()
+
         var emailRegEx = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,5})+$/
 
-        if (emailRegEx.test(email)) {
-            return
-        } else {
-            event.preventDefault()
+        if (!emailRegEx.test(email)) {
             showEmailError()
+            return
         }
+
+        fetch('http://localhost:3001/sc/notify_me', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.message)
+                setEmail('')
+            })
+            .catch(error => console.error(error))
     }
 
     const showEmailError = () => {
@@ -105,6 +120,7 @@ function Body(props) {
                                                 ? styles.error_input
                                                 : undefined
                                         }
+                                        value={email}
                                         onChange={e => setEmail(e.target.value)}
                                     />
                                     <input type='submit' value='Notify me' />

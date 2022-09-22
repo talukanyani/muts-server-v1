@@ -18,7 +18,10 @@ router.post('/', validateEmail, checkEmailDup, (req, res) => {
             return
         }
 
-        res.json({ "status": "successfully_submitted" })
+        res.json({
+            "message": "successfully_submitted",
+            "email": req.body.email
+        })
         onDevelopment && console.log(dbInfo)
     })
 })

@@ -13,7 +13,7 @@ const checkEmailDup = (req, res, next) => {
         if (dbInfo == 0) {
             next()
         } else {
-            res.json({ "status": "already_subscribed" })
+            res.json({ "message": "already_subscribed" })
         }
     })
 }

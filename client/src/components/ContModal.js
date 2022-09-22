@@ -54,17 +54,40 @@ function ContModal(props) {
     }
 
     const handleSubmit = event => {
+        event.preventDefault()
+
         var isValidName = validateName(name)
         var isValidEmail = validateEmail(email)
         var isValidMessage = validateMessage(message)
 
-        if (isValidName & isValidEmail & isValidMessage) return;
-
-        event.preventDefault()
-
         if (!isValidName) showNameError(name)
         if (!isValidEmail) showEmailError(email)
         if (!isValidMessage) showMessageError(message)
+
+        if (isValidName & isValidEmail & isValidMessage) {
+            fetch('http://localhost:3001/contact', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    text: message
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.message)
+                    setName('')
+                    setEmail('')
+                    setMessage('')
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        }
     }
 
     const showNameError = value => {

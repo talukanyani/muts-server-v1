@@ -18,14 +18,29 @@ function Body() {
     const [data, setData] = useState([])
 
     const handleSubmit = event => {
+        event.preventDefault()
+
         var emailRegEx = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,5})+$/
 
-        if (emailRegEx.test(email)) {
-            return
-        } else {
-            event.preventDefault()
+        if (!emailRegEx.test(email)) {
             showEmailError()
+            return
         }
+
+        fetch('http://localhost:3001/newsletter', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.message)
+                setEmail('')
+            })
+            .catch(error => console.error(error))
     }
 
     const showEmailError = () => {
@@ -51,20 +66,22 @@ function Body() {
         }
     }, [isContModal])
 
-    const testAPI = () => {
-        return fetch('http://localhost:3001')
-            .then(res => res.json())
-            .then(json => {
-                setData(json.status)
-            })
-            .catch(error => {
-                console.error(error)
-            })
-    }
+    // const testAPI = () => {
+    //     return fetch('http://localhost:3001')
+    //         .then(res => res.json())
+    //         .then(json => {
+    //             setData(json.status)
+    //         })
+    //         .catch(error => {
+    //             console.error(error)
+    //         })
+    // }
 
-    useEffect(() => {
-        testAPI()
-    }, [])
+    // useEffect(() => {
+    //     testAPI()
+    // }, [])
+
+
 
     return (
         <div className={styles.body_overlay}>
@@ -107,6 +124,7 @@ function Body() {
                                         ? styles.error_input
                                         : undefined
                                 }
+                                value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
                             <input
