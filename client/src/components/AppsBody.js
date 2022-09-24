@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './AppsBody.module.css'
 
+import Alert from './Alert';
 import SmallHeading from '../elements/SmallHeading'
 
 import sclogo from '../assets/sc-logo.svg'
@@ -11,8 +12,22 @@ import sc_app_illustration from '../assets/sc_app_illustration.png'
 
 function Body(props) {
     const emailInput = useRef(null)
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(null);
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [isAlert, setIsAlert] = useState(false)
+    const [alertTitle, setAlertTitle] = useState('')
+    const [alertBody, setAlertBody] = useState('')
+
+    const handleResponse = resData => {
+        setAlertTitle(resData.title)
+        setAlertBody(resData.message)
+        setIsAlert(true)
+        setIsLoading(false)
+        setEmail('')
+    }
 
     const handleSubmit = event => {
         event.preventDefault()
@@ -24,6 +39,8 @@ function Body(props) {
             return
         }
 
+        setIsLoading(true)
+
         fetch('http://localhost:3001/sc/notify_me', {
             method: 'POST',
             headers: {
@@ -33,11 +50,12 @@ function Body(props) {
             body: JSON.stringify({ email: email })
         })
             .then(res => res.json())
-            .then(data => {
-                console.log(data.message)
+            .then(resData => handleResponse(resData))
+            .catch(error => {
+                console.error(error)
+                setIsLoading(false)
                 setEmail('')
             })
-            .catch(error => console.error(error))
     }
 
     const showEmailError = () => {
@@ -47,6 +65,14 @@ function Body(props) {
             setEmailError('Enter valid email!')
         }
     }
+
+    useEffect(() => {
+        if (isAlert) {
+            document.body.style.overflowY = 'hidden'
+        } else {
+            document.body.style.overflowY = 'visible'
+        }
+    }, [isAlert])
 
     return (
         <div className={styles.body_overlay}>
@@ -123,13 +149,27 @@ function Body(props) {
                                         value={email}
                                         onChange={e => setEmail(e.target.value)}
                                     />
-                                    <input type='submit' value='Notify me' />
+                                    <input
+                                        type='submit'
+                                        value={
+                                            isLoading
+                                                ? 'Submiting...'
+                                                : 'Notify Me'
+                                        }
+                                        disabled={isLoading}
+                                    />
                                     <span>{emailError}</span>
                                 </form>
                             </section>
                         </div>
                     </div>
                 </div>
+                <Alert
+                    isAlert={isAlert}
+                    close={() => setIsAlert(false)}
+                    alertTitle={alertTitle}
+                    alertBody={alertBody}
+                />
             </div>
         </div >
     );

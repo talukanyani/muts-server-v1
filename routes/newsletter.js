@@ -19,8 +19,8 @@ router.post('/', validateEmail, checkEmailDup, (req, res) => {
         }
 
         res.json({
-            "message": "successfully_subscribed",
-            "email": req.body.email
+            "title": "Successfully Subscribed",
+            "message": "You have successfully subscribed to our newsletter, we will keep uptaded."
         })
         onDevelopment && console.log(dbInfo)
     })

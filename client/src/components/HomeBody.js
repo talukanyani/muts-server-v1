@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './HomeBody.module.css'
 import { useNavigate } from 'react-router-dom';
 
-import ContModal from '../components/ContModal';
+import ContModal from './ContModal';
+import Alert from './Alert';
 
 import Button from '../elements/Button1';
 import SmallHeading from '../elements/SmallHeading';
@@ -12,10 +13,22 @@ import instagram from '../assets/icon-instagram.svg'
 
 function Body() {
     const [isContModal, setIsContModal] = useState(false)
+    const [isAlert, setIsAlert] = useState(false)
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState(null);
 
-    const [data, setData] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [alertTitle, setAlertTitle] = useState('')
+    const [alertBody, setAlertBody] = useState('')
+
+    const handleResponse = resData => {
+        setAlertTitle(resData.title)
+        setAlertBody(resData.message)
+        setIsAlert(true)
+        setIsLoading(false)
+        setEmail('')
+    }
 
     const handleSubmit = event => {
         event.preventDefault()
@@ -27,6 +40,8 @@ function Body() {
             return
         }
 
+        setIsLoading(true)
+
         fetch('http://localhost:3001/newsletter', {
             method: 'POST',
             headers: {
@@ -36,11 +51,12 @@ function Body() {
             body: JSON.stringify({ email: email })
         })
             .then(res => res.json())
-            .then(data => {
-                console.log(data.message)
+            .then(resData => handleResponse(resData))
+            .catch(error => {
+                console.error(error)
+                setIsLoading(false)
                 setEmail('')
             })
-            .catch(error => console.error(error))
     }
 
     const showEmailError = () => {
@@ -59,29 +75,12 @@ function Body() {
     }
 
     useEffect(() => {
-        if (isContModal) {
+        if (isContModal || isAlert) {
             document.body.style.overflowY = 'hidden'
         } else {
             document.body.style.overflowY = 'visible'
         }
-    }, [isContModal])
-
-    // const testAPI = () => {
-    //     return fetch('http://localhost:3001')
-    //         .then(res => res.json())
-    //         .then(json => {
-    //             setData(json.status)
-    //         })
-    //         .catch(error => {
-    //             console.error(error)
-    //         })
-    // }
-
-    // useEffect(() => {
-    //     testAPI()
-    // }, [])
-
-
+    }, [isContModal, isAlert])
 
     return (
         <div className={styles.body_overlay}>
@@ -89,7 +88,6 @@ function Body() {
                 <div className={styles.container_apps}>
                     <SmallHeading text='Apps' />
                     <h2>Explore apps engineered and developed for you.</h2>
-                    <p>{data}</p>
                     <Button
                         text='Show all apps'
                         onClick={goToApps}
@@ -129,7 +127,10 @@ function Body() {
                             />
                             <input
                                 type='submit'
-                                value='Subscribe'
+                                value={
+                                    isLoading ? 'Subscribing...' : 'Subscribe'
+                                }
+                                disabled={isLoading}
                             />
                             <span>{emailError}</span>
                         </form>
@@ -163,6 +164,12 @@ function Body() {
                 <ContModal
                     isContModal={isContModal}
                     close={() => setIsContModal(false)}
+                />
+                <Alert
+                    isAlert={isAlert}
+                    close={() => setIsAlert(false)}
+                    alertTitle={alertTitle}
+                    alertBody={alertBody}
                 />
             </div>
         </div>

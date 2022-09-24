@@ -13,7 +13,10 @@ const checkEmailDup = (req, res, next) => {
         if (dbInfo == 0) {
             next()
         } else {
-            res.json({ "message": "already_submited" })
+            res.json({
+                "title": "Already Submitted",
+                "message": "You have already submitted your email, we will email you when SC App is available to download."
+            })
         }
     })
 }

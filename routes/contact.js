@@ -21,8 +21,8 @@ router.post('/', middlewares, (req, res) => {
         }
 
         res.json({
-            "message": "successfully_sent",
-            "email": req.body.email
+            "title": "Successfully Sent",
+            "message": `We have recevied your message, we will contact you back on ${req.body.email}`
         })
         onDevelopment && console.log(info)
     })
