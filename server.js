@@ -20,6 +20,17 @@ app.use('/newsletter', newsletter)
 app.use('/sc/notify_me', scNewsletter)
 app.use('/contact', contact)
 
+app.use((req, res) => {
+    res.sendStatus(404)
+})
+
+const onDevelopment = app.get('env') == 'development'
+
+app.use((error, req, res, next) => {
+    onDevelopment && console.error(error)
+    res.sendStatus(500)
+})
+
 const port = process.env.PORT || 3001
 
 app.listen(port, () => {

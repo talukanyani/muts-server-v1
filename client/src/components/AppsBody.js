@@ -29,6 +29,15 @@ function Body(props) {
         setEmail('')
     }
 
+    const handleError = error => {
+        console.error(error)
+        setAlertTitle("Something Went Wrong")
+        setAlertBody("There was an error while processing your request, try again.")
+        setIsAlert(true)
+        setIsLoading(false)
+        setEmail('')
+    }
+
     const handleSubmit = event => {
         event.preventDefault()
 
@@ -51,11 +60,7 @@ function Body(props) {
         })
             .then(res => res.json())
             .then(resData => handleResponse(resData))
-            .catch(error => {
-                console.error(error)
-                setIsLoading(false)
-                setEmail('')
-            })
+            .catch(error => handleError(error))
     }
 
     const showEmailError = () => {

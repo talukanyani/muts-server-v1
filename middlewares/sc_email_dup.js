@@ -6,14 +6,14 @@ const checkEmailDup = (req, res, next) => {
 
     checkEmailDuplication(reqdetails, table, (dbError, dbInfo) => {
         if (dbError) {
-            res.sendStatus(500)
+            next(new Error(dbError))
             return
         }
 
         if (dbInfo == 0) {
             next()
         } else {
-            res.json({
+            res.status(100).json({
                 "title": "Already Submitted",
                 "message": "You have already submitted your email, we will email you when SC App is available to download."
             })

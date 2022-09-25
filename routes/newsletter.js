@@ -8,13 +8,13 @@ const router = express.Router()
 
 const onDevelopment = express().get('env') == 'development'
 
-router.post('/', validateEmail, checkEmailDup, (req, res) => {
+router.post('/', validateEmail, checkEmailDup, (req, res, next) => {
     var reqdetails = req.body
 
     subscribe(reqdetails, (dbError, dbInfo) => {
         if (dbError) {
-            res.sendStatus(500)
-            onDevelopment && console.log(dbError)
+            next(new Error(dbError))
+            // onDevelopment && console.log(dbError)
             return
         }
 
@@ -26,12 +26,12 @@ router.post('/', validateEmail, checkEmailDup, (req, res) => {
     })
 })
 
-router.delete('/', (req, res) => {
+router.delete('/', (req, res, next) => {
     var reqdetails = req.body
 
     unsubscribe(reqdetails, (dbError, dbInfo) => {
         if (dbError) {
-            res.sendStatus(500)
+            next(new Error(dbError))
             onDevelopment && console.log(dbError)
             return
         }

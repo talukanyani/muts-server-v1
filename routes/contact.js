@@ -10,12 +10,12 @@ const onDevelopment = express().get('env') == 'development'
 
 const middlewares = [validateMssg, validateEmail, checkEmailDup]
 
-router.post('/', middlewares, (req, res) => {
+router.post('/', middlewares, (req, res, next) => {
     var reqdetails = req.body
 
     send(reqdetails, (dbError, info) => {
         if (dbError) {
-            res.sendStatus(500)
+            next(new Error(dbError))
             onDevelopment && console.log(dbError)
             return
         }

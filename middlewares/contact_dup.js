@@ -6,14 +6,14 @@ const checkEmailDup = (req, res, next) => {
 
     checkEmailDuplication(reqdetails, table, (dbError, dbInfo) => {
         if (dbError) {
-            res.sendStatus(500)
+            next(new Error(dbError))
             return
         }
 
         if (dbInfo == 0) {
             next()
         } else {
-            res.json({
+            res.status(100).json({
                 "title": "Already Sent",
                 "message": "We already received your message, wait until we respond to your message."
             })
