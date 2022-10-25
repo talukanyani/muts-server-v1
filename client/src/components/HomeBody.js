@@ -51,7 +51,7 @@ function Body() {
 
         setIsLoading(true)
 
-        fetch('http://localhost:3001/newsletter', {
+        fetch('/newsletter', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -122,12 +122,12 @@ function Body() {
                                 placeholder='Email'
                                 id='subs_email'
                                 name='subs_email'
+                                value={email}
                                 className={
                                     emailError !== null
                                         ? styles.error_input
                                         : undefined
                                 }
-                                value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
                             <input

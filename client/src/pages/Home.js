@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import Body from '../components/HomeBody';
 
-function Home() {
+function Home(props) {
     return (
         <>
             <Navbar />

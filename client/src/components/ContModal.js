@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styles from './ContModal.module.css'
-
 import Alert from './Alert';
 
 import SmallHeading from '../elements/SmallHeading'
@@ -41,7 +40,9 @@ function ContModal(props) {
         setAlertBody("There was an error while processing your request, try again.")
         setIsAlert(true)
         setIsLoading(false)
+        setName('')
         setEmail('')
+        setMessage('')
     }
 
     const validateName = value => {
@@ -94,7 +95,7 @@ function ContModal(props) {
         setIsLoading(true)
 
         if (isValidName & isValidEmail & isValidMessage) {
-            fetch('http://localhost:3001/contact', {
+            fetch('/contact', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

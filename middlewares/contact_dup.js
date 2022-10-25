@@ -13,7 +13,7 @@ const checkEmailDup = (req, res, next) => {
         if (dbInfo == 0) {
             next()
         } else {
-            res.status(100).json({
+            res.json({
                 "title": "Already Sent",
                 "message": "We already received your message, wait until we respond to your message."
             })
