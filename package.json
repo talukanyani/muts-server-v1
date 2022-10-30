@@ -1,11 +1,10 @@
 {
   "name": "tmlab-website-server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./server.js"
+    "start": "node ./bin/www"
   },
   "owner": "Tmlab",
   "author": {
@@ -16,7 +15,12 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.1",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "helmet": "^6.0.0",
     "mysql": "^2.18.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
