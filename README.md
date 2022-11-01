@@ -1,13 +1,12 @@
 # Tmlab Website
 
 ## About The Project
-The is a website to show apps of Tmlab(Talukanyani Mutshaeni's Laboratry).
-Users can find links to downlod specific app in Play Store or App Store. Users can also send messages to Tmlab and also subscribe to their newsletter.
+This is a website to show Tmlab apps.
+Users can find links to downlod specific app in Play Store or App Store. Users can send messages to Tmlab and also subscribe to their newsletter.
 
 ## How it Works
 This program servers [tmlab-website-client](https://github.com/Talukanyani/tmlab-website-client) to the user's browser.
 It also handles other user's request such as sending message, and send back the response using REST API.
-
 
 ## Technologies Used
 - Javascript
@@ -23,10 +22,13 @@ It also handles other user's request such as sending message, and send back the 
 ```bash
 npm install
 ```
-4. Start Project
+4. Start the Project
 ```bash
 npm start
 ```
 
 ## Run the Project Online
 Visit [tmlab.tech](https://tmlab.tech)
+
+## Author
+[Talukanyani](https://github.com/Talukanyani)
