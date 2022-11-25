@@ -5,11 +5,14 @@ const helmet = require('helmet')
 const newsletter = require('./routes/newsletter')
 const scNewsletter = require('./routes/sc-newsletter')
 const contact = require('./routes/contact')
+const contact_portfolio = require('./routes/portfolio')
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+app.use(helmet())
 
 // app.use(cors({
 //   origin: 'http://localhost:3000',
@@ -19,11 +22,10 @@ app.use(express.urlencoded({ extended: false }))
 
 // console.log(process.env.NODE_ENV);
 
-app.use(helmet())
-
 app.use('/newsletter', newsletter)
 app.use('/sc/notify_me', scNewsletter)
 app.use('/contact', contact)
+app.use('/api/portfolio', contact_portfolio)
 
 app.use(express.static(`${__dirname}/client/build`))
 

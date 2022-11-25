@@ -15,8 +15,8 @@ const emailSubmit = (reqdetails, result) => {
     db(sqlQuery, result)
 }
 
-const send = (reqdetails, result) => {
-    var sqlQuery = `INSERT INTO new_messages (name, email, text) VALUES('${reqdetails.name}', '${reqdetails.email}', '${reqdetails.text}')`
+const send = (reqdetails, table, result) => {
+    var sqlQuery = `INSERT INTO ${table} (name, email, text) VALUES('${reqdetails.name}', '${reqdetails.email}', '${reqdetails.text}')`
     db(sqlQuery, result)
 }
 
