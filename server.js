@@ -20,7 +20,7 @@ app.use(helmet())
 // console.log(process.env.NODE_ENV);
 
 const portfolioCors = {
-  origin: 'https://talukanyani.github.io/portfolio',
+  origin: 'https://talukanyani.github.io',
   methods: 'POST',
   Credentials: true,
 }
