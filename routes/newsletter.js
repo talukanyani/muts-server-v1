@@ -19,6 +19,7 @@ router.post('/', validateEmail, checkEmailDup, (req, res, next) => {
         }
 
         res.json({
+            "type": "success",
             "title": "Successfully Subscribed",
             "message": "You have successfully subscribed to our newsletter, we will you keep uptaded."
         })

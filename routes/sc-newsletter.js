@@ -19,6 +19,7 @@ router.post('/', validateEmail, checkEmailDup, (req, res, next) => {
         }
 
         res.json({
+            "type": "success",
             "title": "Successfully Submitted",
             "message": "We have received your email, we will email you when SC App is available to download."
         })

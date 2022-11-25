@@ -14,6 +14,7 @@ const checkEmailDup = (req, res, next) => {
             next()
         } else {
             res.json({
+                "type": "rejected",
                 "title": "Already Sent",
                 "message": "We already received your message, wait until we respond to your message."
             })

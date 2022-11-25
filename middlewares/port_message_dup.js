@@ -2,7 +2,7 @@ const { checkEmailDuplication } = require('../models/models')
 
 const checkEmailDup = (req, res, next) => {
     var reqdetails = req.body
-    var table = 'newsletter_emails'
+    var table = 'portfolio_messages'
 
     checkEmailDuplication(reqdetails, table, (dbError, dbInfo) => {
         if (dbError) {
@@ -15,12 +15,12 @@ const checkEmailDup = (req, res, next) => {
         } else {
             res.json({
                 "type": "rejected",
-                "title": "Already Subscribed",
-                "message": "You have already subscribed to our newsletter, we will keep you updated when neccessary."
+                "title": "Already Sent",
+                "message": "I already received your message, I will contact you back as soon as I see it.",
+                "dbInfo": dbInfo,
             })
         }
     })
 }
 
 module.exports = checkEmailDup
-

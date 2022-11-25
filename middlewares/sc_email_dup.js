@@ -14,6 +14,7 @@ const checkEmailDup = (req, res, next) => {
             next()
         } else {
             res.json({
+                "type": "rejected",
                 "title": "Already Submitted",
                 "message": "You have already submitted your email, we will email you when SC App is available to download."
             })
