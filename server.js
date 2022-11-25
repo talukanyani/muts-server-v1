@@ -14,18 +14,21 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use(helmet())
 
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   Credentials: true,
-//   optionSucessStatus: 200
-// }))
+//For Development
+// app.use(cors({origin: 'http://localhost:3000'}))
 
 // console.log(process.env.NODE_ENV);
+
+const portfolioCors = {
+  origin: 'https://talukanyani.github.io/portfolio',
+  methods: 'POST',
+  Credentials: true,
+}
 
 app.use('/newsletter', newsletter)
 app.use('/sc/notify_me', scNewsletter)
 app.use('/contact', contact)
-app.use('/api/portfolio', contact_portfolio)
+app.use('/api/portfolio', cors(portfolioCors), contact_portfolio)
 
 app.use(express.static(`${__dirname}/client/build`))
 
@@ -49,14 +52,14 @@ module.exports = app;
 
 /* on production
 set Enviroment to production ($env:NODE_ENV="production")
-unenable cors() on this file
+unenable cors for localhost:3000 on this file
 change nodemon to node on parkage.json file
 change from devDB to proDB object on dBConfig.js file
 */
 
 /* on development
 set Enviroment to development ($env:NODE_ENV="development")
-enable cors on this file
+enable cors for localhost:3000 
 change node to nodemon(npm install globally) on parkage.json file
 change from prodDB to devDB object on dBConfig.js file
 */
