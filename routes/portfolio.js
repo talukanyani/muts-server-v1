@@ -1,36 +1,29 @@
 const express = require('express')
-
-const { send } = require('../models/models')
+const { submitMessage } = require('../models/models')
 const { sendEmail } = require('../middlewares/email')
-const { validateMssg, validateEmail } = require('../middlewares/validate')
-const checkEmailDup = require('../middlewares/port_message_dup')
+const { validateMessage, validateEmail } = require('../middlewares/validate')
+
+const app = express()
 
 const router = express.Router()
 
-const middlewares = [validateMssg, validateEmail, checkEmailDup]
-
-const onDevelopment = express().get('env') == 'development'
+const middlewares = [validateMessage, validateEmail]
 
 router.post('/contact', middlewares, (req, res, next) => {
-    var reqdetails = req.body
-    var table = 'portfolio_messages'
+    const reqBody = req.body
+    const sqlTable = 'portfolio_messages'
 
-    send(reqdetails, table, (dbError, info) => {
+    submitMessage(reqBody, sqlTable, (dbError, dbResult) => {
         if (dbError) {
             next(new Error(dbError))
-            onDevelopment && console.log(dbError)
             return
         }
 
-        sendEmail('Portfolio', reqdetails)
+        sendEmail('Portfolio', reqBody)
 
-        res.json({
-            "type": "success",
-            "title": "Successfully Sent",
-            "message": `I have recevied your message, I will contact you back on ${reqdetails.email}`
-        })
+        res.sendStatus(200);
 
-        onDevelopment && console.log(info)
+        if (app.get('env') === 'development') console.log(dbResult);
     })
 })
 

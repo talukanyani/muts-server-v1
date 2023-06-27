@@ -1,16 +1,21 @@
-const mysql = require('mysql')
-const dbConfig = require('../config/dbConfig')
+const express = require('express')
+const { Pool } = require('pg')
+const { devDbConfig, prodDbConfig } = require('../config/db')
 
-const connection = mysql.createConnection(dbConfig)
+const app = express()
 
-const db = (sqlQuery, result) => {
-    connection.query(sqlQuery, (error, info, field) => {
+const dbConfig = (app.get('env') === 'development') ? devDbConfig : prodDbConfig
+
+const pool = new Pool(dbConfig)
+
+function db(query, values, result) {
+    pool.query(query, values, (error, info) => {
         if (error) {
-            result(error, null, null)
+            result(error, null)
             return
         }
 
-        result(null, info, field)
+        result(null, info)
     })
 }
 

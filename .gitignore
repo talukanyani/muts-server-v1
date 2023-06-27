@@ -1,11 +1,13 @@
 # npm
 node_modules
-package-lock.json
 *.log
 *.gz
 
-#aws
-.elasticbeanstalk/
+# aws cloud
+.elasticbeanstalk
+
+# private files
+config/email.js
 
 # Coveralls
 .nyc_output

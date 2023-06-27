@@ -1,36 +1,29 @@
 const express = require('express')
-
-const { send } = require('../models/models')
+const { submitMessage } = require('../models/models')
 const { sendEmail } = require('../middlewares/email')
-const { validateMssg, validateEmail } = require('../middlewares/validate')
-const checkEmailDup = require('../middlewares/contact_dup')
+const { validateMessage, validateEmail } = require('../middlewares/validate')
+
+const app = express()
 
 const router = express.Router()
 
-const onDevelopment = express().get('env') == 'development'
-
-const middlewares = [validateMssg, validateEmail, checkEmailDup]
+const middlewares = [validateMessage, validateEmail]
 
 router.post('/', middlewares, (req, res, next) => {
-    var reqdetails = req.body
-    var table = 'new_messages'
+    const reqBody = req.body
+    const sqlTable = 'new_messages'
 
-    send(reqdetails, table, (dbError, info) => {
+    submitMessage(reqBody, sqlTable, (dbError, dbResult) => {
         if (dbError) {
             next(new Error(dbError))
-            onDevelopment && console.log(dbError)
             return
         }
 
-        sendEmail('Tmlab Website', reqdetails)
+        sendEmail('Muts Website', reqBody)
 
-        res.json({
-            "type": "success",
-            "title": "Successfully Sent",
-            "message": `We have recevied your message, we will contact you back on ${req.body.email}`
-        })
+        res.sendStatus(200);
 
-        onDevelopment && console.log(info)
+        if (app.get('env') === 'development') console.log(dbResult);
     })
 })
 

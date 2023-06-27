@@ -1,42 +1,33 @@
-const onDevelopment = process.env.NODE_ENV == 'development'
+function validateEmail(req, res, next) {
+    const rangeRegEx = /^.{1,50}$/
+    const emailRegEx = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{1,10})+$/
 
-const validateEmail = (req, res, next) => {
-    var emailRegEx = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,5})+$/
-    var isValidEmail = emailRegEx.test(req.body.email)
+    const email = req.body.email
+
+    const isValidEmail = rangeRegEx.test(email) && emailRegEx.test(email)
 
     if (!isValidEmail) {
-        res.sendStatus(500)
-        onDevelopment && console.log('Invalid Email')
-        return
+        next(new Error('Invalid Email'))
     } else {
         next()
     }
-
 }
 
-const validateMssg = (req, res, next) => {
-    var nameRegEx = /^[a-zA-Z]{2,20}(\s[a-zA-Z]{2,20})?$/
-    var textRegEx = /^.{30,250}$/
+function validateMessage(req, res, next) {
+    const nameRegEx = /^[A-Za-z]([ ]?[A-Za-z]+)+$/
+    const nameRangeRegEx = /^.{2,30}$/
+    const textRegEx = /^.{30,250}$/
 
-    var isValidName = nameRegEx.test(req.body.name)
-    var isValidText = textRegEx.test(req.body.text)
+    const reqBody = req.body
 
-    if (!isValidName) {
-        res.sendStatus(500)
-        onDevelopment && console.log('Invalid Name')
-        return
+    const isValidName = nameRangeRegEx.test(reqBody.name) && nameRegEx.test(reqBody.name)
+    const isValidText = textRegEx.test(reqBody.text)
+
+    if (!isValidName || !isValidText) {
+        next(new Error('Invalid Name or text'))
+    } else {
+        next()
     }
-
-    if (!isValidText) {
-        res.sendStatus(500)
-        onDevelopment && console.log('Invalid Text')
-        return
-    }
-
-    next()
 }
 
-module.exports = {
-    validateMssg,
-    validateEmail
-} 
+module.exports = { validateMessage, validateEmail } 

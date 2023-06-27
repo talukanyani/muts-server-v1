@@ -4,8 +4,8 @@
  * Module dependencies.
  */
 
-var app = require('../server');
-var debug = require('debug')('tmlab-website-server:server');
+var app = require('../app');
+var debug = require('debug')('muts_website_server:app');
 var http = require('http');
 
 /**

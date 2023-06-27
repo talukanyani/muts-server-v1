@@ -1,34 +1,26 @@
 const db = require('./db')
 
-const subscribe = (reqdetails, result) => {
-    var sqlQuery = `INSERT INTO newsletter_emails (email) VALUES('${reqdetails.email}')`
-    db(sqlQuery, result)
+function submitEmail(email, result) {
+    const sqlQuery = 'INSERT INTO mailing_list (email) VALUES($1)'
+    const values = [email]
+
+    db(sqlQuery, values, result)
 }
 
-const unsubscribe = (reqdetails, result) => {
-    var sqlQuery = `DELETE FROM newsletter_emails WHERE id = ${reqdetails.id} AND email = '${reqdetails.email}'`
-    db(sqlQuery, result)
+function checkEmailDuplication(email, result) {
+    const query = 'SELECT id FROM mailing_list WHERE email = $1';
+    const values = [email]
+
+    db(query, values, result)
 }
 
-const emailSubmit = (reqdetails, result) => {
-    var sqlQuery = `INSERT INTO sc_emails (email) VALUES('${reqdetails.email}')`
-    db(sqlQuery, result)
+function submitMessage(reqBody, table, result) {
+    const { name, email, text } = reqBody
+
+    const query = `INSERT INTO ${table} (name, email, text) VALUES($1, $2, $3)`
+    const values = [name, email, text]
+
+    db(query, values, result)
 }
 
-const send = (reqdetails, table, result) => {
-    var sqlQuery = `INSERT INTO ${table} (name, email, text) VALUES('${reqdetails.name}', '${reqdetails.email}', '${reqdetails.text}')`
-    db(sqlQuery, result)
-}
-
-const checkEmailDuplication = (reqdetails, table, result) => {
-    var sqlQuery = `SELECT id FROM ${table} WHERE email = '${reqdetails.email}'`
-    db(sqlQuery, result)
-}
-
-module.exports = {
-    subscribe,
-    unsubscribe,
-    emailSubmit,
-    send,
-    checkEmailDuplication
-}
+module.exports = { submitEmail, checkEmailDuplication, submitMessage }
