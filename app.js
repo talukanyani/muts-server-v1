@@ -4,6 +4,7 @@ const helmet = require('helmet')
 const mailingList = require('./routes/mailing_list')
 const contact = require('./routes/contact')
 const portfolio = require('./routes/portfolio')
+const student_calendar = require('./routes/student_calendar')
 
 const app = express()
 
@@ -20,6 +21,7 @@ const portfolioCors = {
   Credentials: true,
 }
 
+app.use('/student_calendar', student_calendar)
 app.use('/contact', contact)
 app.use('/api/mailing_list', mailingList)
 app.use('/api/talukanyani/portfolio', cors(portfolioCors), portfolio)
