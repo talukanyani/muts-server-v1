@@ -1,30 +1,16 @@
 const express = require('express')
-const { submitMessage } = require('../models/models')
+const { submitMessage } = require('../models/db')
 const { sendEmail } = require('../middlewares/email')
-const { validateMessage, validateEmail } = require('../middlewares/validate')
-
-const app = express()
+const { validateMessage } = require('../middlewares/validate')
 
 const router = express.Router()
 
-const middlewares = [validateMessage, validateEmail]
+router.post('/', validateMessage, (req, res) => {
+    submitMessage(req.body, 'new_messages');
 
-router.post('/', middlewares, (req, res, next) => {
-    const reqBody = req.body
-    const sqlTable = 'new_messages'
+    sendEmail(req.body, 'Muts Website');
 
-    submitMessage(reqBody, sqlTable, (dbError, dbResult) => {
-        if (dbError) {
-            next(new Error(dbError))
-            return
-        }
-
-        sendEmail('Muts Website', reqBody)
-
-        res.sendStatus(200);
-
-        if (app.get('env') === 'development') console.log(dbResult);
-    })
+    res.sendStatus(200);
 })
 
 module.exports = router

@@ -1,22 +1,29 @@
-const express = require('express')
-const { Pool } = require('pg')
-const { devDbConfig, prodDbConfig } = require('../config/db')
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getFirestore, FieldValue } = require('firebase-admin/firestore');
+const serviceAccount = require('../config/firebase.json');
 
-const app = express()
+initializeApp({
+    credential: cert(serviceAccount)
+});
 
-const dbConfig = (app.get('env') === 'development') ? devDbConfig : prodDbConfig
+const db = getFirestore();
 
-const pool = new Pool(dbConfig)
-
-function db(query, values, result) {
-    pool.query(query, values, (error, info) => {
-        if (error) {
-            result(error, null)
-            return
-        }
-
-        result(null, info)
-    })
+function submitEmail(email) {
+    db.collection('mailing_list').doc(email).set({
+        email: email,
+        timestamp: FieldValue.serverTimestamp(),
+    });
 }
 
-module.exports = db
+function submitMessage(reqBody, collection) {
+    const { senderName, senderEmail, messageBody } = reqBody;
+
+    db.collection(collection).add({
+        senderName: senderName,
+        senderEmail: senderEmail,
+        messageBody: messageBody,
+        timestamp: FieldValue.serverTimestamp(),
+    });
+}
+
+module.exports = { submitEmail, submitMessage }

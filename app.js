@@ -4,7 +4,6 @@ const helmet = require('helmet')
 const mailingList = require('./routes/mailing_list')
 const contact = require('./routes/contact')
 const portfolio = require('./routes/portfolio')
-const student_calendar = require('./routes/student_calendar')
 
 const app = express()
 
@@ -15,33 +14,36 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use(helmet())
 
-const portfolioCors = {
-  origin: 'https://talukanyani.github.io',
+const mutsCors = {
+  origin: 'https://muts.dev',
   methods: 'POST',
   Credentials: true,
 }
 
-app.use('/student_calendar', student_calendar)
+const portfolioCors = {
+  origin: 'https://talu-m.web.app',
+  methods: 'POST',
+  Credentials: true,
+}
+
+app.use(cors(mutsCors))
+
 app.use('/contact', contact)
-app.use('/api/mailing_list', mailingList)
-app.use('/api/talukanyani/portfolio', cors(portfolioCors), portfolio)
+app.use('/mailing_list', mailingList)
+app.use(
+  '/api/v1/talukanyani/portfolio',
+  cors(portfolioCors),
+  portfolio
+)
 
-app.use(express.static(`${__dirname}/client/build`))
-
-app.get('/*', (req, res) => {
-  res.sendFile(`${__dirname}/client/build/index.html`)
-});
-
-// 404 handler
-app.use((req, res, next) => {
-  res.sendStatus(404)
+app.use((req, res) => {
+  res.redirect(`https://muts.dev/${req.path}`)
 });
 
 // error handler
 app.use((error, req, res, next) => {
   if (app.get('env') === 'development') console.log(error)
-  res.status(error.status || 500)
-  res.send('Something went wrong')
+  res.sendStatus(error.status || 500)
 });
 
 module.exports = app;

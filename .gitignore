@@ -8,6 +8,8 @@ node_modules
 
 # private files
 config/email.js
+config/firebase.json
+.vscode
 
 # Coveralls
 .nyc_output

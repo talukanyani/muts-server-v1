@@ -4,7 +4,9 @@ const emailConfig = require('../config/email')
 
 const app = express()
 
-function sendEmail(origin, reqBody) {
+function sendEmail(reqBody, origin) {
+    const { senderName, senderEmail, messageBody } = reqBody;
+
     const transporter = nodemailer.createTransport({
         host: "smtp-mail.outlook.com",
         secureConnection: false,
@@ -20,7 +22,7 @@ function sendEmail(origin, reqBody) {
 
     const mailOptions = {
         from: emailConfig.email,
-        to: 'tmutshaeni@hotmail.com, 219055590@student.uj.ac.za',
+        to: 'tmutshaeni@hotmail.com',
         subject: `New Message From ${origin}`,
         html: `
         <!DOCTYPE html>
@@ -28,10 +30,10 @@ function sendEmail(origin, reqBody) {
             <body>
               <h1>New Message from ${origin}<h1>
               <ul>
-                <li>SenderName: ${reqBody.name}</li>
-                <li>SenderEmail: ${reqBody.email}</li>
+                <li>SenderName: ${senderName}</li>
+                <li>SenderEmail: ${senderEmail}</li>
               </ul>
-              <p>${reqBody.text}</p>
+              <p>${messageBody}</p>
             </body>
         </html>
         `
